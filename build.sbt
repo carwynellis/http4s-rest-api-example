@@ -1,8 +1,13 @@
-ThisBuild / version := "0.1.0-SNAPSHOT"
+ThisBuild / name          := "http4s-rest-api-example"
+ThisBuild / version       := "0.1.0-SNAPSHOT"
+ThisBuild / scalaVersion  := "2.13.14"
 
-ThisBuild / scalaVersion := "2.13.14"
+val http4sVersion     = "0.23.27"
+val wiremockVersion   = "3.9.1"
+val scalaTestVersion  = "3.2.19"
 
-lazy val root = (project in file("."))
-  .settings(
-    name := "http4s-rest-api-example"
-  )
+ThisBuild / libraryDependencies ++= Seq(
+  "org.http4s"             %% "http4s-circe"             % http4sVersion,
+  "org.http4s"             %% "http4s-ember-client"      % http4sVersion,
+  "org.scalatest"          %% "scalatest"                % scalaTestVersion        % "test",
+)
