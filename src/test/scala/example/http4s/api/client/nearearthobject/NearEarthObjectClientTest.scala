@@ -1,5 +1,6 @@
 package example.http4s.api.client.nearearthobject
 
+import cats.effect.unsafe.implicits.global
 import example.http4s.api.client.nearearthobject.model.{NearEarthObject, NearEarthObjectResponse}
 import example.http4s.api.test.WireMockSupport
 import org.scalatest.funsuite.AnyFunSuiteLike
@@ -16,7 +17,9 @@ class NearEarthObjectClientTest extends AnyFunSuiteLike with should.Matchers wit
     val fromDate = LocalDate.parse("2024-01-01")
     val toDate = LocalDate.parse("2024-01-01")
 
-    val result = underTest.get(fromDate, toDate)
+    stubValidResponse()
+
+    val result = underTest.get(fromDate, toDate).unsafeRunSync()
 
     result shouldBe NearEarthObjectResponse(List(
       NearEarthObject("465633 (2009 JR5)"),
@@ -25,7 +28,7 @@ class NearEarthObjectClientTest extends AnyFunSuiteLike with should.Matchers wit
   }
 
   private def stubValidResponse() = {
-    stubFor(get(urlEqualTo("neo/rest/v1/feed?start_date=2024-01-01&end_date=2024-01-01&api_key=DEMO_KEY"))
+    stubFor(get(urlEqualTo("/neo/rest/v1/feed?start_date=2024-01-01&end_date=2024-01-01&api_key=DEMO_KEY"))
       .willReturn(
         aResponse()
           .withStatus(200)
