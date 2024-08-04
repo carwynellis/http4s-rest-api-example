@@ -8,6 +8,7 @@ import org.scalatest.matchers.should
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
 
 import java.time.LocalDate
+import scala.List
 
 class NearEarthObjectClientTest extends AnyFunSuiteLike with should.Matchers with WireMockSupport {
 
@@ -21,9 +22,11 @@ class NearEarthObjectClientTest extends AnyFunSuiteLike with should.Matchers wit
 
     val result = underTest.get(fromDate, toDate).unsafeRunSync()
 
-    result shouldBe NearEarthObjectResponse(List(
+    result shouldBe NearEarthObjectResponse(Map(
+      "2024-01-01" -> List(
       NearEarthObject("465633 (2009 JR5)"),
       NearEarthObject("(2008 QV11)")
+      )
     ))
   }
 
@@ -44,7 +47,7 @@ class NearEarthObjectClientTest extends AnyFunSuiteLike with should.Matchers wit
               |  },
               |  "element_count": 2,
               |  "near_earth_objects": {
-              |    "2015-09-08": [
+              |    "2024-01-01": [
               |      {
               |        "links": {
               |          "self": "http://api.nasa.gov/neo/rest/v1/neo/2465633?api_key=DEMO_KEY"
