@@ -26,6 +26,21 @@ class AsteroidRoutesTest extends AnyFunSuiteLike with should.Matchers with Mocki
     .routes
     .orNotFound
 
+  test("Should return an asteroid for a valid id") {
+    val asteroid =  Asteroid("12345", "Foo")
+
+    when(mockAsteroidService.getAsteroidById(matches("12345")))
+      .thenReturn(IO.pure(asteroid))
+
+    val response = runRequest(underTest, Request[IO](
+      method = GET,
+      uri = uri"/asteroid/12345"
+    ))
+
+    response.status shouldBe Ok
+    response.fromJson[Asteroid] shouldBe asteroid
+  }
+
   test("Should return matching data for valid date range") {
     val asteroids = Seq(
       Asteroid("1", "Foo"),

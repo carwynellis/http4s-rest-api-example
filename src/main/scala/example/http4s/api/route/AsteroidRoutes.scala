@@ -16,6 +16,8 @@ import scala.util.Try
 class AsteroidRoutes(asteroidService: AsteroidService) {
 
   def routes: HttpRoutes[IO] = HttpRoutes.of[IO] {
+    // TODO - this only handles the happy path
+    case GET -> Root / "asteroid" / id => Ok(asteroidService.getAsteroidById(id))
     case GET -> Root / "asteroid"
       :? FromDateQueryParameterMatcher(from)
       :? ToDateQueryParameterMatcher(to)
