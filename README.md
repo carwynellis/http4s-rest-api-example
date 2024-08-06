@@ -1,7 +1,7 @@
 # http4s-rest-api-example
 A simple http4s rest api acting as a frontend to another http service
 
-## Overivew
+## Overview
 
 Implements the following
 * retrieval of asteroids for a given date range
@@ -20,3 +20,4 @@ extended to include a wider range of data
 * client and server logging
 * error handling - only the happy path is covered properly
 * configuration - properties are hardcoded as defaults for now
+* implementation could be generalised in terms of `F[_]`
