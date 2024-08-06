@@ -15,4 +15,7 @@ class AsteroidService(client: NearEarthObjectClient = new NearEarthObjectClient(
       asteroids = nearEarthObjects.map(n => Asteroid(n.name))
     } yield asteroids.toSeq
 
+  def getSortedAsteroidsForDateRange(from: LocalDate, to: LocalDate): IO[Seq[Asteroid]] =
+    getAsteroidsForDateRange(from, to).map(_.sorted)
+
 }
