@@ -47,6 +47,48 @@ class AsteroidRoutesTest extends AnyFunSuiteLike with should.Matchers with Mocki
     response.fromJson[Seq[Asteroid]] shouldBe asteroids
   }
 
+  test("Should return sorted data where sorting requested") {
+    val asteroids = Seq(
+      Asteroid("Bar"),
+      Asteroid("Baz"),
+      Asteroid("Foo"),
+    )
+
+    when(mockAsteroidService.getSortedAsteroidsForDateRange(
+      matches(LocalDate.parse("2024-01-01")),
+      matches(LocalDate.parse("2024-01-02")))
+    ).thenReturn(IO.pure(asteroids))
+
+    val response = runRequest(underTest, Request[IO](
+      method = GET,
+      uri = uri"/asteroid?from=2024-01-01&to=2024-01-02&sort=true"
+    ))
+
+    response.status shouldBe Ok
+    response.fromJson[Seq[Asteroid]] shouldBe asteroids
+  }
+
+  test("Should not return sorted data where sorting explicitly disabled") {
+    val asteroids = Seq(
+      Asteroid("Bar"),
+      Asteroid("Baz"),
+      Asteroid("Foo"),
+    )
+
+    when(mockAsteroidService.getAsteroidsForDateRange(
+      matches(LocalDate.parse("2024-01-01")),
+      matches(LocalDate.parse("2024-01-02")))
+    ).thenReturn(IO.pure(asteroids))
+
+    val response = runRequest(underTest, Request[IO](
+      method = GET,
+      uri = uri"/asteroid?from=2024-01-01&to=2024-01-02&sort=false"
+    ))
+
+    response.status shouldBe Ok
+    response.fromJson[Seq[Asteroid]] shouldBe asteroids
+  }
+
   test("Should return bad request if from and to dates missing") {
     val response = runRequest(underTest, Request[IO](
       method = GET,
@@ -96,6 +138,15 @@ class AsteroidRoutesTest extends AnyFunSuiteLike with should.Matchers with Mocki
     val response = runRequest(underTest, Request[IO](
       method = GET,
       uri = uri"/asteroid?from=2024-01-01&to=2023-01-02"
+    ))
+
+    response.status shouldBe BadRequest
+  }
+
+  test("Should return bad request if sort parameter value is invalid") {
+    val response = runRequest(underTest, Request[IO](
+      method = GET,
+      uri = uri"/asteroid?from=2024-01-01&to=2024-01-02&sort=foo"
     ))
 
     response.status shouldBe BadRequest
