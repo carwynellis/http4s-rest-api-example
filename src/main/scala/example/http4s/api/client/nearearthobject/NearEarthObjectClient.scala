@@ -1,7 +1,7 @@
 package example.http4s.api.client.nearearthobject
 
 import cats.effect.IO
-import example.http4s.api.client.nearearthobject.model.NearEarthObjectResponse
+import example.http4s.api.client.nearearthobject.model.{NearEarthObject, NearEarthObjectResponse}
 import org.http4s.ember.client.EmberClientBuilder
 import org.http4s.circe.CirceEntityCodec.circeEntityDecoder
 
@@ -13,9 +13,14 @@ class NearEarthObjectClient(
 
   private val client = EmberClientBuilder.default[IO].build
 
-  def get(from: LocalDate, to: LocalDate): IO[NearEarthObjectResponse] =
+  def getForDateRange(from: LocalDate, to: LocalDate): IO[NearEarthObjectResponse] =
     client.use {
-      client => client.expect[NearEarthObjectResponse](s"$baseUrl?start_date=$from&end_date=$to&api_key=$apiKey")
+      client => client.expect[NearEarthObjectResponse](s"$baseUrl/feed?start_date=$from&end_date=$to&api_key=$apiKey")
+    }
+
+  def getById(id: String): IO[NearEarthObject] =
+    client.use {
+      client => client.expect[NearEarthObject](s"$baseUrl/neo/$id?api_key=$apiKey")
     }
 
 }
@@ -23,5 +28,5 @@ class NearEarthObjectClient(
 object NearEarthObjectClient {
   // TODO - this should come from config
   val ApiKey = "DEMO_KEY"
-  val BaseUrl = "https://api.nasa.gov/neo/rest/v1/feed"
+  val BaseUrl = "https://api.nasa.gov/neo/rest/v1/"
 }

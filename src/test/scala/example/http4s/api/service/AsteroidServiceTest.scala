@@ -57,7 +57,7 @@ class AsteroidServiceTest extends AnyFunSuiteLike with should.Matchers with Mock
   }
 
   private def givenTheClientReturns(data: Map[String, List[NearEarthObject]]) =
-    when(mockClient.get(any(), any()))
+    when(mockClient.getForDateRange(any(), any()))
       .thenReturn(IO.pure(NearEarthObjectResponse(data)))
 
 

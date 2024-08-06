@@ -8,29 +8,53 @@ import org.scalatest.matchers.should
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlEqualTo}
 
 import java.time.LocalDate
-import scala.List
 
 class NearEarthObjectClientTest extends AnyFunSuiteLike with should.Matchers with WireMockSupport {
 
-  private lazy val underTest = new NearEarthObjectClient(s"$baseUrl/neo/rest/v1/feed")
+  private lazy val underTest = new NearEarthObjectClient(s"$baseUrl/neo/rest/v1")
+
+  test("should return a near earth object for a given id") {
+    stubValidObjectByIdResponse()
+
+    val result = underTest.getById("12345").unsafeRunSync()
+
+    result shouldBe NearEarthObject("12345", "Foo")
+  }
 
   test("should return near earth objects response for a valid request") {
     val fromDate = LocalDate.parse("2024-01-01")
     val toDate = LocalDate.parse("2024-01-01")
 
-    stubValidResponse()
+    stubValidDateRangeResponse()
 
-    val result = underTest.get(fromDate, toDate).unsafeRunSync()
+    val result = underTest.getForDateRange(fromDate, toDate).unsafeRunSync()
 
     result shouldBe NearEarthObjectResponse(Map(
       "2024-01-01" -> List(
-      NearEarthObject("2465633", "465633 (2009 JR5)"),
-      NearEarthObject("3426410", "(2008 QV11)")
+        NearEarthObject("2465633", "465633 (2009 JR5)"),
+        NearEarthObject("3426410", "(2008 QV11)")
       )
     ))
   }
 
-  private def stubValidResponse() = {
+  private def stubValidObjectByIdResponse(): Unit = {
+    stubFor(get(urlEqualTo("/neo/rest/v1/neo/12345?api_key=DEMO_KEY"))
+      .willReturn(
+        aResponse()
+          .withStatus(200)
+          .withHeader("Content-type", "application/json")
+          // This contains a minimal JSON response for testing
+          .withBody(
+            """
+              |{
+              | "id": "12345",
+              | "name": "Foo"
+              |}
+              |""".stripMargin)))
+
+  }
+
+  private def stubValidDateRangeResponse() = {
     stubFor(get(urlEqualTo("/neo/rest/v1/feed?start_date=2024-01-01&end_date=2024-01-01&api_key=DEMO_KEY"))
       .willReturn(
         aResponse()

@@ -10,7 +10,7 @@ class AsteroidService(client: NearEarthObjectClient = new NearEarthObjectClient(
 
   def getAsteroidsForDateRange(from: LocalDate, to: LocalDate): IO[Seq[Asteroid]] =
     for {
-      result <- client.get(from, to)
+      result <- client.getForDateRange(from, to)
       nearEarthObjects = result.nearEarthObjects.values.flatten
       // TODO - factor out the conversion when more fields are taken from the response
       asteroids = nearEarthObjects.map(n => Asteroid(n.id, n.name))
