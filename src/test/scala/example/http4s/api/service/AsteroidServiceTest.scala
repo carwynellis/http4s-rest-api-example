@@ -19,6 +19,14 @@ class AsteroidServiceTest extends AnyFunSuiteLike with should.Matchers with Mock
 
   private val underTest = new AsteroidService(mockClient)
 
+  test("should return an asteroid for a given id") {
+    givenTheClientReturns(NearEarthObject("12345", "foo"))
+
+    val result = underTest.getAsteroidById("12345").unsafeRunSync()
+
+    result shouldBe Asteroid("12345", "foo")
+  }
+
   test("should return a list of near earth objects for a given date range") {
 
     givenTheClientReturns(
@@ -59,6 +67,10 @@ class AsteroidServiceTest extends AnyFunSuiteLike with should.Matchers with Mock
   private def givenTheClientReturns(data: Map[String, List[NearEarthObject]]) =
     when(mockClient.getForDateRange(any(), any()))
       .thenReturn(IO.pure(NearEarthObjectResponse(data)))
+
+  private def givenTheClientReturns(nearEarthObject: NearEarthObject) =
+    when(mockClient.getById(any()))
+      .thenReturn(IO.pure(nearEarthObject))
 
 
 }
