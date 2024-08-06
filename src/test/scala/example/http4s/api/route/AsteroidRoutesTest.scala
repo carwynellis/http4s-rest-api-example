@@ -28,9 +28,9 @@ class AsteroidRoutesTest extends AnyFunSuiteLike with should.Matchers with Mocki
 
   test("Should return matching data for valid date range") {
     val asteroids = Seq(
-      Asteroid("Foo"),
-      Asteroid("Bar"),
-      Asteroid("Baz"),
+      Asteroid("1", "Foo"),
+      Asteroid("2", "Bar"),
+      Asteroid("3", "Baz"),
     )
 
     when(mockAsteroidService.getAsteroidsForDateRange(
@@ -49,9 +49,9 @@ class AsteroidRoutesTest extends AnyFunSuiteLike with should.Matchers with Mocki
 
   test("Should return sorted data where sorting requested") {
     val asteroids = Seq(
-      Asteroid("Bar"),
-      Asteroid("Baz"),
-      Asteroid("Foo"),
+      Asteroid("1", "Bar"),
+      Asteroid("2", "Baz"),
+      Asteroid("3", "Foo"),
     )
 
     when(mockAsteroidService.getSortedAsteroidsForDateRange(
@@ -70,9 +70,9 @@ class AsteroidRoutesTest extends AnyFunSuiteLike with should.Matchers with Mocki
 
   test("Should not return sorted data where sorting explicitly disabled") {
     val asteroids = Seq(
-      Asteroid("Bar"),
-      Asteroid("Baz"),
-      Asteroid("Foo"),
+      Asteroid("3", "Foo"),
+      Asteroid("1", "Bar"),
+      Asteroid("2", "Baz"),
     )
 
     when(mockAsteroidService.getAsteroidsForDateRange(

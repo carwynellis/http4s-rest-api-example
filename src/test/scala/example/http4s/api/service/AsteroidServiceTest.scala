@@ -22,7 +22,7 @@ class AsteroidServiceTest extends AnyFunSuiteLike with should.Matchers with Mock
   test("should return a list of near earth objects for a given date range") {
 
     givenTheClientReturns(
-      Map("2024-01-01" -> List(NearEarthObject("foo")))
+      Map("2024-01-01" -> List(NearEarthObject("12345", "foo")))
     )
 
     val result = underTest.getAsteroidsForDateRange(
@@ -30,7 +30,7 @@ class AsteroidServiceTest extends AnyFunSuiteLike with should.Matchers with Mock
       LocalDate.parse("2024-01-01")
     ).unsafeRunSync()
 
-    result shouldBe List(Asteroid("foo"))
+    result shouldBe List(Asteroid("12345", "foo"))
   }
 
   test("should return a sorted list of near earth objects for a given date range")  {
@@ -38,9 +38,9 @@ class AsteroidServiceTest extends AnyFunSuiteLike with should.Matchers with Mock
     givenTheClientReturns(
       Map(
         "2024-01-01" -> List(
-          NearEarthObject("foo"),
-          NearEarthObject("bar"),
-          NearEarthObject("baz"),
+          NearEarthObject("3", "foo"),
+          NearEarthObject("1", "bar"),
+          NearEarthObject("2", "baz"),
         )))
 
     val result = underTest.getSortedAsteroidsForDateRange(
@@ -49,9 +49,9 @@ class AsteroidServiceTest extends AnyFunSuiteLike with should.Matchers with Mock
     ).unsafeRunSync()
 
     result shouldBe List(
-      Asteroid("bar"),
-      Asteroid("baz"),
-      Asteroid("foo"),
+      Asteroid("1", "bar"),
+      Asteroid("2", "baz"),
+      Asteroid("3", "foo"),
     )
 
   }

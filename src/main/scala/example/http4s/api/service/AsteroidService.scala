@@ -12,7 +12,8 @@ class AsteroidService(client: NearEarthObjectClient = new NearEarthObjectClient(
     for {
       result <- client.get(from, to)
       nearEarthObjects = result.nearEarthObjects.values.flatten
-      asteroids = nearEarthObjects.map(n => Asteroid(n.name))
+      // TODO - factor out the conversion when more fields are taken from the response
+      asteroids = nearEarthObjects.map(n => Asteroid(n.id, n.name))
     } yield asteroids.toSeq
 
   def getSortedAsteroidsForDateRange(from: LocalDate, to: LocalDate): IO[Seq[Asteroid]] =

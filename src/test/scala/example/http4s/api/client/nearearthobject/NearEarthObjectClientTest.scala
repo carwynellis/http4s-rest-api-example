@@ -24,8 +24,8 @@ class NearEarthObjectClientTest extends AnyFunSuiteLike with should.Matchers wit
 
     result shouldBe NearEarthObjectResponse(Map(
       "2024-01-01" -> List(
-      NearEarthObject("465633 (2009 JR5)"),
-      NearEarthObject("(2008 QV11)")
+      NearEarthObject("2465633", "465633 (2009 JR5)"),
+      NearEarthObject("3426410", "(2008 QV11)")
       )
     ))
   }
