@@ -19,13 +19,10 @@ class AsteroidRoutes(asteroidService: AsteroidService) {
     case GET -> Root / "asteroid"
       :? FromDateQueryParameterMatcher(from)
       :? ToDateQueryParameterMatcher(to)
-      :? SortQueryParameterMatcher(sort) =>
-      (from, to, sort) match {
-        case (Valid(fromDate), Valid(toDate), Some(Valid(sortData))) if toDate >= fromDate =>
+      :? SortQueryParameterMatcher(sort) => (from, to, sort.getOrElse(Valid(false))) match {
+        case (Valid(fromDate), Valid(toDate), Valid(sortData)) if toDate >= fromDate =>
           if (sortData) Ok(asteroidService.getSortedAsteroidsForDateRange(fromDate, toDate))
           else Ok(asteroidService.getAsteroidsForDateRange(fromDate, toDate))
-        case (Valid(fromDate), Valid(toDate), None) if toDate >= fromDate =>
-          Ok(asteroidService.getAsteroidsForDateRange(fromDate, toDate))
         // TODO - revise to look at invalid values and provide specific error messages for each parameter
         case _ => BadRequest("from and to date query parameters missing or invalid parameter values")
       }
