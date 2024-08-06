@@ -8,12 +8,12 @@ val http4sVersion             = "0.23.27"
 val scalaTestVersion          = "3.2.19"
 val scalaTestMockitoVersion   = "3.2.19.0"
 val wireMockVersion           = "3.9.1"
-val wiremockVersion           = "3.9.1"
 
 ThisBuild / libraryDependencies ++= Seq(
   "org.http4s"             %% "http4s-circe"             % http4sVersion,
   "org.http4s"             %% "http4s-dsl"               % http4sVersion,
   "org.http4s"             %% "http4s-ember-client"      % http4sVersion,
+  "org.http4s"             %% "http4s-ember-server"      % http4sVersion,
   "io.circe"               %% "circe-core"               % circeVersion,
   "io.circe"               %% "circe-generic"            % circeVersion,
   "io.circe"               %% "circe-generic-extras"     % circeGenericExtrasVersion,
@@ -21,3 +21,6 @@ ThisBuild / libraryDependencies ++= Seq(
   "org.scalatestplus"      %% "mockito-5-12"             % scalaTestMockitoVersion % "test",
   "org.wiremock"           %  "wiremock"                 % wireMockVersion  % "test",
 )
+
+// Fork so the server runs separately from sbt when started interactively
+Compile / run / fork := true
