@@ -3,7 +3,7 @@
 # Runs a sample request against the running service and formats the output with
 # jq if available.
 
-result=$(curl -X GET 'http://localhost:8080/asteroid?from=2024-01-01&to=2024-01-01' -s)
+result=$(curl -X GET 'http://localhost:8080/asteroid/54421384' -s)
 
 if hash jq &> /dev/null
 then
